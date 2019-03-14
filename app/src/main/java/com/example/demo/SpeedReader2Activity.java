@@ -15,6 +15,7 @@ import android.widget.ToggleButton;
 import com.example.heimbsle69869.demo.R;
 
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class SpeedReader2Activity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class SpeedReader2Activity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int xPos = (progress * (frequencySeekBar.getWidth() - 2 * frequencySeekBar.getThumbOffset())) / frequencySeekBar.getMax();
                 frequency = (progress < 50 ? (0.018 * (progress+5.55556)) : (9*progress-400)/50);
-                frequencyDisplay.setText(String.format("%.1f", frequency));
+                frequencyDisplay.setText(String.format(Locale.GERMAN,"%.1f", frequency));
                 frequencyDisplay.setX(frequencySeekBar.getX() + xPos + frequencySeekBar.getThumbOffset() / 2);
             }
 
@@ -114,14 +115,6 @@ public class SpeedReader2Activity extends AppCompatActivity {
             wordFreq.resetCounter();
             wordFreq.cancel(true);
             wordFreq = null;
-        }
-    }
-
-    public void s3Clicked(View view) {
-        String[] words = text.split(" ");
-        if (wordCount < words.length) {
-            singleTextView.setText(words[wordCount]);
-            wordCount++;
         }
     }
 
