@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name="com.example.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +25,7 @@
         <activity android:name="com.example.demo.FragmentedActivity" />
         <activity android:name="com.example.demo.SpeedReader1Activity" />
         <activity android:name="com.example.demo.SpeedReader2Activity" />
+        <activity android:name="com.example.demo.SS17" />
     </application>
 
 </manifest>
