@@ -26,16 +26,12 @@ public class SpeedReader2Activity extends AppCompatActivity {
     private TextView frequencyDisplay;
     private SeekBar frequencySeekBar;
     private ToggleButton toggleButton;
-    private static int wordCount;
     private WordsFrequencyClass wordFreq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_reader2);
-
-        // Set wordCount
-        wordCount = 0;
 
         // Get Views
         multilineTextView = findViewById(R.id.multilineTextView);
@@ -102,8 +98,6 @@ public class SpeedReader2Activity extends AppCompatActivity {
     public void s2Clicked(View view) {
         multilineTextView.setText("");
         singleTextView.setText("");
-        wordCount = 0;
-
         toggleButton.setChecked(false);
 
         if (wordFreq == null) {

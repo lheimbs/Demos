@@ -23,17 +23,47 @@ import java.util.ArrayList;
 public class SS17 extends AppCompatActivity {
     private SeekBar circlesSeekBar;
     private CirclesFragment circlesFragment;
+    private SharedViewModel model;
+    public int currentCircles = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(this.getClass().getSimpleName());
+        setTitle(this.getClass().getName());
         setContentView(R.layout.activity_ss17);
+
+        model = ViewModelProviders.of(this).get(SharedViewModel.class);
+
+        circlesFragment = (CirclesFragment) getSupportFragmentManager().findFragmentById(R.id.circlesFragment);
+
+        circlesSeekBar = findViewById(R.id.circlesSeekBar);
+        circlesSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                model.setNumCircles(progress);
+                //currentCircles = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+         });
     }
 
     public static class CirclesFragment extends Fragment {
         private CircleSurfaceView circleSurfaceView;
         private SharedViewModel model;
+
+        @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+        }
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,16 +73,31 @@ public class SS17 extends AppCompatActivity {
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_surface_view, container, false);
-            circleSurfaceView = view.findViewById(R.id.circleSurfaceViewId);
-            return view;
+            circleSurfaceView = new CircleSurfaceView(getActivity(), model);
+            return circleSurfaceView;
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
         }
 
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            circleSurfaceView.start();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            circleSurfaceView.stop();
         }
 
         private class CircleSurfaceView extends SurfaceView implements Runnable {
@@ -62,7 +107,7 @@ public class SS17 extends AppCompatActivity {
             private Thread thread = null;
             private volatile boolean running =false;
 
-            public CircleSurfaceView(Context c) {
+            public CircleSurfaceView(Context c, SharedViewModel model) {
                 super(c);
                 holder = getHolder();
                 paint = new Paint();
@@ -94,9 +139,9 @@ public class SS17 extends AppCompatActivity {
                     if (!holder.getSurface().isValid()) { continue; }
                     Canvas canvas = holder.lockCanvas();
                     if (circles == null) {
-                        makeCircles(100, canvas);
+                        makeCircles(model.getNumCircles(), canvas);
                     }
-                    drawCricles(canvas);
+                    drawCircles(canvas);
                     holder.unlockCanvasAndPost(canvas);
                     moveCircles();
                 }
@@ -109,7 +154,7 @@ public class SS17 extends AppCompatActivity {
                 }
             }
 
-            private void drawCricles(Canvas canvas) {
+            private void drawCircles(Canvas canvas) {
                 paint.setStyle(Paint.Style.FILL);
                 canvas.drawRGB(0,0,0);
                 for (Circle c: circles) {
@@ -124,31 +169,5 @@ public class SS17 extends AppCompatActivity {
                 }
             }
         }
-    }
-}
-
-public class Circle {
-    public Circle(int height, int width) {
-
-    }
-
-    public int color() {
-        return 1;
-    }
-
-    public float x() {
-        return (float) 1.0;
-    }
-
-    public float y() {
-        return (float) 1.0;
-    }
-
-    public float radius() {
-        return (float) 1.0;
-    }
-
-    public void move() {
-
     }
 }
