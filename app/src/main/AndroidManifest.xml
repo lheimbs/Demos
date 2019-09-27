@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.example.demo.WS15"></activity>
         <activity android:name="com.example.demo.DrawCircles" />
         <activity android:name="com.example.demo.MainActivity">
             <intent-filter>
@@ -30,6 +29,15 @@
         <activity android:name="com.example.demo.SpeedReader1Activity" />
         <activity android:name="com.example.demo.SpeedReader2Activity" />
         <activity android:name="com.example.demo.SS17" />
+        <activity android:name="com.example.demo.WS15" />
+        <activity
+            android:name="com.example.demo.WS15Activity2"
+            android:parentActivityName="com.example.demo.WS15" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.demo.WS15" />
+        </activity>
+
     </application>
 
 </manifest>

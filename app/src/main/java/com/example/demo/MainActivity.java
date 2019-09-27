@@ -29,7 +29,7 @@ public class MainActivity extends ListActivity {
             PackageInfo info = pm.getPackageInfo(getApplicationContext().getPackageName(), PackageManager.GET_ACTIVITIES);
             for (ActivityInfo activityInfo : info.activities) {
                 String name = activityInfo.name.replace(PACKAGE_NAME + ".", "");
-                if (!name.equals(MainActivity.class.getSimpleName()))
+                if (!name.equals(MainActivity.class.getSimpleName()) && !name.equals(WS15Activity2.class.getSimpleName()))
                     demos.add(name);
             }
         } catch (Exception e) {
