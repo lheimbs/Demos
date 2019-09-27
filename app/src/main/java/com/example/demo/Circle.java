@@ -2,6 +2,7 @@ package com.example.demo;
 
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -23,6 +24,8 @@ public class Circle {
         speed.y = vMax*rand.nextFloat();
         radius = xMax*(0.1f + rand.nextFloat())/10;
         color = Color.argb(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256),rand.nextInt(256));
+
+        Log.i("NumCircle", "Color: " + Color.alpha(color) + " " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " Pos: " + position.x + " " + position.y + " Speed: " + speed.x + " " + speed.y);
     }
 
     public int color() {
@@ -50,5 +53,6 @@ public class Circle {
         if (position.y < 0 || position.y >= maxPos.y) {
             speed.y = -speed.y;
         }
+        //Log.i("NumCirclePos", "x: " + position.x + " y:" + position.y);
     }
 }

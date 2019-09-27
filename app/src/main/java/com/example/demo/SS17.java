@@ -2,13 +2,18 @@ package com.example.demo;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,13 +23,12 @@ import android.widget.SeekBar;
 
 import com.example.heimbsle69869.demo.R;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class SS17 extends AppCompatActivity {
     private SeekBar circlesSeekBar;
     private CirclesFragment circlesFragment;
     private SharedViewModel model;
-    public int currentCircles = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +39,11 @@ public class SS17 extends AppCompatActivity {
         model = ViewModelProviders.of(this).get(SharedViewModel.class);
 
         circlesFragment = (CirclesFragment) getSupportFragmentManager().findFragmentById(R.id.circlesFragment);
+        circlesFragment.getView().setBackgroundColor(Color.WHITE);
 
         circlesSeekBar = findViewById(R.id.circlesSeekBar);
+        circlesSeekBar.setProgress(0);
+        model.setNumCircles(0);
         circlesSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -56,36 +63,36 @@ public class SS17 extends AppCompatActivity {
          });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = p.edit();
+        editor.putInt("currentCircles", circlesSeekBar.getProgress());
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        super.onResume();
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int currCircles = p.getInt("currentCircles", 0);
+        circlesSeekBar.setProgress(currCircles);
+    }
+
     public static class CirclesFragment extends Fragment {
         private CircleSurfaceView circleSurfaceView;
-        private SharedViewModel model;
-
-        @Override
-        public void onAttach(Context context) {
-            super.onAttach(context);
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-        }
 
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            circleSurfaceView = new CircleSurfaceView(getActivity(), model);
+            circleSurfaceView = new CircleSurfaceView(getActivity());
+            circleSurfaceView.setZOrderOnTop(true);
+            circleSurfaceView.setBackgroundColor(Color.WHITE);
+            //circleSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             return circleSurfaceView;
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         }
 
         @Override
@@ -101,15 +108,48 @@ public class SS17 extends AppCompatActivity {
         }
 
         private class CircleSurfaceView extends SurfaceView implements Runnable {
-            private ArrayList<Circle> circles = null;
+            private LinkedList<Circle> circles;
             private Paint paint;
             private SurfaceHolder holder;
             private Thread thread = null;
             private volatile boolean running =false;
+            private SharedViewModel model;
+            private int currentCircles;
+            private int newCircles;
+            private int xMax, yMax;
 
-            public CircleSurfaceView(Context c, SharedViewModel model) {
+
+            public CircleSurfaceView(Context c) {
                 super(c);
+                circles = new LinkedList<>();
+                model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
                 holder = getHolder();
+                holder.addCallback(new SurfaceHolder.Callback() {
+                    @Override
+                    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                        Log.i("NumCircles", "SurfaceCreated");
+                        Canvas canvas = surfaceHolder.lockCanvas();
+                        xMax = canvas.getWidth();
+                        yMax = canvas.getHeight();
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+
+
+                        currentCircles = model.getNumCircles();
+                        initCircles(currentCircles);
+
+                    }
+
+                    @Override
+                    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                    }
+                });
+                newCircles = circles.size();
                 paint = new Paint();
                 paint.setAntiAlias(true);
             }
@@ -135,28 +175,42 @@ public class SS17 extends AppCompatActivity {
 
             @Override
             public void run() {
+
                 while (running) {
-                    if (!holder.getSurface().isValid()) { continue; }
-                    Canvas canvas = holder.lockCanvas();
-                    if (circles == null) {
-                        makeCircles(model.getNumCircles(), canvas);
+                    newCircles = model.getNumCircles();
+
+                    if (!holder.getSurface().isValid() || circles == null) { continue; }
+
+                    if (newCircles < currentCircles) {
+                        for (int i = 0; i<currentCircles-newCircles; i++) {
+                            circles.pollLast();
+                        }
+                        currentCircles = newCircles;
                     }
+                    else if (newCircles > currentCircles) {
+                        for (int i = 0; i < newCircles - currentCircles; i++) {
+                            circles.add(new Circle(xMax, yMax));
+                        }
+                        currentCircles = newCircles;
+                    }
+                    Log.i("NumCircles", Integer.toString(circles.size()));
+                    Canvas canvas = holder.lockCanvas();
                     drawCircles(canvas);
                     holder.unlockCanvasAndPost(canvas);
                     moveCircles();
                 }
             }
 
-            private void makeCircles(int numCircles, Canvas canvas) {
-                circles = new ArrayList<>();
+            private void initCircles(int numCircles) {
                 for (int i = 0; i < numCircles; i++) {
-                    circles.add(new Circle(canvas.getWidth(), canvas.getHeight()));
+                    circles.add(new Circle(xMax, yMax));
                 }
+                currentCircles = numCircles;
             }
 
             private void drawCircles(Canvas canvas) {
                 paint.setStyle(Paint.Style.FILL);
-                canvas.drawRGB(0,0,0);
+                canvas.drawRGB(255,255,255);
                 for (Circle c: circles) {
                     paint.setColor(c.color());
                     canvas.drawCircle(c.x(), c.y(), c.radius(), paint);

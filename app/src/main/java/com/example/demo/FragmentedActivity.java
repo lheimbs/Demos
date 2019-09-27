@@ -36,7 +36,6 @@ public class FragmentedActivity extends /*AppCompatActivity,*/ FragmentActivity 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
         }
 
         @Override

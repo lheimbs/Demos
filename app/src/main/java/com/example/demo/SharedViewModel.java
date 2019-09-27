@@ -18,14 +18,13 @@ public class SharedViewModel extends ViewModel {
     }
 
     public int getNumCircles() {
-        int n = 5;
         try {
-            n = numCircles.getValue();
+            return numCircles.getValue();
         }
         catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
-        return n;
     }
 
     void setNumCircles(int item) {
