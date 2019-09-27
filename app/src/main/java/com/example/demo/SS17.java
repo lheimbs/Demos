@@ -75,7 +75,6 @@ public class SS17 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        super.onResume();
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
 
         int currCircles = p.getInt("currentCircles", 0);
