@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.heimbsle69869.demo">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.example.demo.DrawCircles" />
+
         <activity android:name="com.example.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.demo.DrawCircles" />
         <activity android:name="com.example.demo.ClassesActivity" />
         <activity android:name="com.example.demo.SchalterActivity" />
         <activity android:name="com.example.demo.StimmungsbarometerActivity" />
@@ -33,15 +32,18 @@
         <activity android:name="com.example.demo.SS13" />
         <activity android:name="com.example.demo.SS13_Sideactivity" />
         <activity android:name="com.example.demo.WS15" />
+        <activity android:name="com.example.demo.WS12_new$ws12_2" />
+        <activity android:name="com.example.demo.WS12_thread" />
         <activity
             android:name="com.example.demo.WS15Activity2"
-            android:parentActivityName="com.example.demo.WS15" >
+            android:parentActivityName="com.example.demo.WS15">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.demo.WS15" />
         </activity>
-
+        <activity android:name="com.example.demo.WS12" />
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

@@ -5,7 +5,8 @@ import android.arch.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
     final MutableLiveData<Boolean> item = new MutableLiveData<>();
-    final MutableLiveData<Integer> numCircles = new MutableLiveData<>();
+    final MutableLiveData<Integer> counter = new MutableLiveData<>();
+    private final MutableLiveData<Integer> numCircles = new MutableLiveData<>();
 
     public SharedViewModel() { }
 
@@ -17,7 +18,7 @@ public class SharedViewModel extends ViewModel {
         this.item.setValue(item);
     }
 
-    public int getNumCircles() {
+    int getNumCircles() {
         try {
             return numCircles.getValue();
         }
@@ -29,5 +30,13 @@ public class SharedViewModel extends ViewModel {
 
     void setNumCircles(int item) {
         this.numCircles.setValue(item);
+    }
+
+    public int getCounter() {
+        return counter.getValue();
+    }
+
+    void setCounter(int item) {
+        this.counter.setValue(item);
     }
 }

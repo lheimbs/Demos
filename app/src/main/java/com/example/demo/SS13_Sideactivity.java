@@ -62,7 +62,7 @@ public class SS13_Sideactivity extends AppCompatActivity {
         SharedPreferences.Editor editor = p.edit();
         editor.putString("LOGGED_TEXT", logger.getLoggedText());
         editor.apply();
-        Intent intent =new Intent();
+        Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
     }
