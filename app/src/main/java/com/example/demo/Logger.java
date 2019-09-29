@@ -14,15 +14,17 @@ public class Logger
 
     public Logger(String tag, TextView textView, String logInitText)
     {
+        Log.d(tag, "Logger.Constructer");
         this.tag = tag;
         this.textView = textView;
-        sb.append(logInitText);
+        if (!logInitText.isEmpty())
+            sb.append(tag + ": " + logInitText);
     }
 
     public void log(String s)
     {
         Log.d(tag, s);
-        sb.append(s).append("\n");
+        sb.append(tag + ": " + s).append("\n");
         if (textView != null)
         {
             textView.setText(sb.toString());
@@ -33,11 +35,13 @@ public class Logger
     {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-        log(sw.toString());
+        Log.d(tag, "log(" + sw.toString() + ")");
+        log(tag + ": " + sw.toString());
     }
 
     public void clearLog()
     {
+        Log.d(tag, "ClearLog()");
         sb.setLength(0);
         if (textView != null)
         {
@@ -45,8 +49,31 @@ public class Logger
         }
     }
 
+    public void setNewLog(String newText) {
+        Log.d(tag, "ClearLog()");
+        sb.setLength(0);
+        sb.append(newText);
+        if (textView != null)
+        {
+            textView.setText(sb.toString());
+        }
+    }
+
+    public void addPrevLog(String newLog) {
+        Log.d(tag, "ClearLog()");
+        if (!this.getLoggedText().isEmpty())
+            sb.insert(getLoggedText().length(), newLog);
+        else
+            sb.append(newLog);
+        if (textView != null)
+        {
+            textView.setText(sb.toString());
+        }
+    }
+
     public String getLoggedText()
     {
+        Log.d(tag, "getLoggedText()");
         return sb.toString();
     }
 }
