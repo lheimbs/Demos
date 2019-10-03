@@ -89,13 +89,13 @@ public class WS12_thread extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         Log.d("WS12Info", "thread onBackPressed");
         Intent intent = new Intent();
         intent.putExtra("RES", counter);
         //intent.setData(Uri.parse(String.valueOf(counter)));
         setResult(RESULT_OK, intent);
         finish();
+        super.onBackPressed();
     }
 
     class ThreadHandler extends AsyncTask<Void, Integer, Void> {
